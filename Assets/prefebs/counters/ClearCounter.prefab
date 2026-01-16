@@ -65,9 +65,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7438241451981450588, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
+      propertyPath: baseCounter
+      value: 
+      objectReference: {fileID: 1103716102407332412}
+    - target: {fileID: 7438241451981450588, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
       propertyPath: clearCounter
       value: 
       objectReference: {fileID: 1103716102407332412}
+    - target: {fileID: 7438241451981450588, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
+      propertyPath: visualGameObectArray.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7438241451981450588, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
+      propertyPath: 'visualGameObectArray.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7128142422293065066}
     - target: {fileID: 8489276541531669327, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -263,7 +275,8 @@ PrefabInstance:
       propertyPath: visualGameObect
       value: 
       objectReference: {fileID: 7128142422293065066}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7438241451981450588, guid: 0004cb1e11ad014419b943c7da960724, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

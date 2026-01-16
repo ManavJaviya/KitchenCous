@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "PlayerInputAction",
     "maps": [
         {
@@ -19,6 +20,15 @@
                     "type": "Button",
                     "id": "7c97fa97-263d-4667-9d42-4b441336cb5b",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "interectAlternate",
+                    "type": "Button",
+                    "id": "b9589f4f-302a-4b3f-b6a9-5f0f0a0eb0cf",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -143,6 +153,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7fbe67d0-c637-4f6d-9105-364a9cc99c45",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "interectAlternate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

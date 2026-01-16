@@ -8,7 +8,7 @@ public class Player : MonoBehaviour, IKichenObjectParent
      public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
      public class OnSelectedCounterChangedEventArgs : EventArgs
      {
-          public ClearCounter selectedCounter;
+          public BaseCounter selectedCounter;
      }
 
      [SerializeField] private float speed = 7f;
@@ -19,7 +19,7 @@ public class Player : MonoBehaviour, IKichenObjectParent
 
      private bool isWalking;
      private Vector3 lastInterectDir;
-     private ClearCounter selectedCounter;
+     private BaseCounter selectedCounter;
      private KitchenObject kitchenObject;
 
      private void Awake()
@@ -34,6 +34,7 @@ public class Player : MonoBehaviour, IKichenObjectParent
      private void Start()
      {
           gameInput.OnInteractAction += GameInput_OnInteractAction;
+          gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
      }
 
      private void GameInput_OnInteractAction(object sender, System.EventArgs e)
@@ -42,9 +43,12 @@ public class Player : MonoBehaviour, IKichenObjectParent
           {
                selectedCounter.Interact(this);
           }
-          else
+     }
+     private void GameInput_OnInteractAlternateAction(object sender, System.EventArgs e)
+     {
+          if (selectedCounter != null)
           {
-               Debug.LogError("ERROR: selectedCounter is NULL. Raycast might not be detecting objects.");
+               selectedCounter.InteractAlternate(this);
           }
      }
      private void Update()
@@ -77,9 +81,9 @@ public class Player : MonoBehaviour, IKichenObjectParent
           {
                //Debug.Log("Raycast hit: " + raycastHit.transform.name);
 
-               if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+               if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
                {
-                    SetSelectedCounter(clearCounter);
+                    SetSelectedCounter(baseCounter);
                }
                else
                {
@@ -109,7 +113,7 @@ public class Player : MonoBehaviour, IKichenObjectParent
           }
      }
 
-     private void SetSelectedCounter(ClearCounter newCounter)
+     private void SetSelectedCounter(BaseCounter newCounter)
      {
           if (selectedCounter != newCounter)
           {
