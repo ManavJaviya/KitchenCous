@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CuttinmgCounter : BaseCounter, IHasProgress
+public class CuttingCounter : BaseCounter, IHasProgress
 {
+    public static event EventHandler OnAnyCut;
     public event EventHandler<IHasProgress.onProgressChangeEventArgs> onProgressChange;
-
     public event EventHandler OnCut;
 
     [SerializeField] CuttingRecipeSO[] cuttingKitchenObjectSOArray;
@@ -39,9 +39,9 @@ public class CuttinmgCounter : BaseCounter, IHasProgress
                     //player already have kitchen object can't grab more than one
                     if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
                     { //player has plate
-                        if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
+                        if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
                         {
-                            player.GetKitchenObject().DestroySelf();
+                            GetKitchenObject().DestroySelf();
                         }
                     }
                 }
@@ -59,6 +59,8 @@ public class CuttinmgCounter : BaseCounter, IHasProgress
             cuttingProgress++;
 
             OnCut?.Invoke(this, EventArgs.Empty);
+            OnAnyCut?.Invoke(this, EventArgs.Empty);
+            
             CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
             onProgressChange?.Invoke(this, new IHasProgress.onProgressChangeEventArgs
             {

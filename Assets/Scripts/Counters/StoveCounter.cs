@@ -130,9 +130,20 @@ public class StoveCounter : BaseCounter, IHasProgress
                     //player already have kitchen object can't grab more than one
                     if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
                     { //player has plate
-                        if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
+                        if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
                         {
-                            player.GetKitchenObject().DestroySelf();
+                            GetKitchenObject().DestroySelf();
+                            state = State.Ideal;
+
+                onStateChange?.Invoke(this, new onStateChangeEventArgs
+                {
+                    state = state
+                });
+
+                onProgressChange?.Invoke(this, new IHasProgress.onProgressChangeEventArgs
+                {
+                    progressNormalized = 0f
+                });
                         }
                     }
                 }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class CuttingCounterVisuals : MonoBehaviour
 {
     private Animator animator;
-    [SerializeField] CuttinmgCounter cuttinmgCounter;
+    [SerializeField] CuttingCounter cuttinmgCounter;
     const string CUT = "Cut";
 
     void Awake()

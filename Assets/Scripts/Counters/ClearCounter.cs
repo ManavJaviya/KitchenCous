@@ -26,9 +26,9 @@ public class ClearCounter : BaseCounter
             //player already have kitchen object can't grab more than one
             if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
             { //player has plate
-               if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
+               if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
                {
-                  player.GetKitchenObject().DestroySelf();
+                  GetKitchenObject().DestroySelf();
                }
             }
                 else
