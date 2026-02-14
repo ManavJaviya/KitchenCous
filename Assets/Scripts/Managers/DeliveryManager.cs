@@ -23,6 +23,15 @@ public class DeliveryManager : MonoBehaviour
         Instance = this;
         waitingRecipeSOList = new List<RecipeSO>();
     }
+    private void Start()
+    {
+        GameMenu.Instance.OnRestart += GameMenu_OnRestart;
+    }
+
+    private void GameMenu_OnRestart(object sender, EventArgs e)
+    {
+        waitingRecipeSOList.Clear();
+    }
 
     private void Update()
     {

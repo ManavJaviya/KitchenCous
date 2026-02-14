@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance {get; private set;}
     public event EventHandler OnStateChanged;
+    public event EventHandler OnPause;
+    public event EventHandler OnResume;
+
     private enum State
     {
         WaitingToStart,
@@ -17,12 +20,23 @@ public class GameManager : MonoBehaviour
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
     private float gamePlayingTimerMax = 20f;
+    private bool isGamePause = false;
+
     private State state;
 
     private void Awake()
     {
         Instance = this;
         state = State.WaitingToStart;
+    }
+    private void Start()
+    {
+        GameMenu.Instance.OnRestart += GameMenu_OnRestart;
+    }
+
+    private void GameMenu_OnRestart(object sender, EventArgs e)
+    {
+        countdownToStartTimer = 3f;
     }
 
     private void Update()
@@ -31,7 +45,7 @@ public class GameManager : MonoBehaviour
         {
             case State.WaitingToStart:
                 waitingToStartTimer -= Time.deltaTime;
-                
+
                     if(waitingToStartTimer < 0f)
                 {
                     state = State.CountDownToStart;
@@ -60,7 +74,6 @@ public class GameManager : MonoBehaviour
             case State.GameOver:
                 break;
         }
-        Debug.Log(state);
     }
     public bool IsGamePlaying()
     {
@@ -81,5 +94,9 @@ public class GameManager : MonoBehaviour
     public float GetPlayingTimerNormalized()
     {
         return 1 - (gamePlayingTimer / gamePlayingTimerMax);
+    }
+    public void Restart()
+    {
+        state = State.WaitingToStart;
     }
 }

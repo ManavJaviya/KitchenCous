@@ -4,12 +4,23 @@ using UnityEngine;
 
 public class CountdownTimerUI : MonoBehaviour
 {
+    public static CountdownTimerUI Instance{get; private set;}
     [SerializeField] private TextMeshProUGUI countdownTimer;
 
+    private void Awake()
+    {
+        Instance = this;   
+    }
     private void Start()
     {
         GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
+        GameMenu.Instance.OnRestart += GameMenu_OnRestart;
         Hide();
+    }
+
+    private void GameMenu_OnRestart(object sender, EventArgs e)
+    {
+        Show();
     }
 
     private void GameManager_OnStateChanged(object sender, EventArgs e)
@@ -26,7 +37,6 @@ public class CountdownTimerUI : MonoBehaviour
     private void Update()
     {
         countdownTimer.text = Mathf.Ceil(GameManager.Instance.GetCountdoenTimer()).ToString();
-
     }
     private void Show()
     {
