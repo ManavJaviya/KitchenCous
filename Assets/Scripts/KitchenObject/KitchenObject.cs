@@ -20,12 +20,29 @@ public class KitchenObject : MonoBehaviour
          // Clear the object from the OLD parent
          this.KitchenObjectParent.ClearKitchenObject();
       }
-      this.KitchenObjectParent = kitchenObjectPatent;
 
       if (kitchenObjectPatent.HasKitchenObject())
       {
-         Debug.LogError("IKichenObjectParent already has a KitchenObject ");
+         KitchenObject existingObject = kitchenObjectPatent.GetKitchenObject();
+         // Picking up a plate while already holding an ingredient: move ingredient onto the plate instead of orphaning the held object.
+         if (this is PlateKitchenObject plateKitchenObject
+             && !existingObject.TryGetPlate(out _)
+             && plateKitchenObject.TryAddIngredient(existingObject.GetKitchenObjectSO()))
+         {
+            existingObject.DestroySelf();
+            this.KitchenObjectParent = kitchenObjectPatent;
+            kitchenObjectPatent.SetKitchenObjact(this);
+            transform.parent = kitchenObjectPatent.GetKitchenFollowTransform();
+            transform.localPosition = Vector3.zero;
+            return;
+         }
+
+         Debug.LogWarning("IKichenObjectParent already has a KitchenObject; could not merge. Destroying incoming object: " + gameObject.name);
+         Destroy(gameObject);
+         return;
       }
+
+      this.KitchenObjectParent = kitchenObjectPatent;
       kitchenObjectPatent.SetKitchenObjact(this);
 
       transform.parent = kitchenObjectPatent.GetKitchenFollowTransform();

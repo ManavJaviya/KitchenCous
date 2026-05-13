@@ -1,6 +1,4 @@
 using System;
-using Unity.VisualScripting;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class PlateIconUI : MonoBehaviour
@@ -11,10 +9,18 @@ public class PlateIconUI : MonoBehaviour
 
     private void Awake() {
         iconTemplate.gameObject.SetActive(false);
+        if (plateKitchenObject != null)
+        {
+            plateKitchenObject.OnIngridentAdded += PlateKitchenObject_OnIngridentAdded;
+        }
     }
-    void Start()
+
+    private void OnDestroy()
     {
-        plateKitchenObject.OnIngridentAdded += PlateKitchenObject_OnIngridentAdded;
+        if (plateKitchenObject != null)
+        {
+            plateKitchenObject.OnIngridentAdded -= PlateKitchenObject_OnIngridentAdded;
+        }
     }
 
     private void PlateKitchenObject_OnIngridentAdded(object sender, PlateKitchenObject.IngredientAddedEventArgs e)
@@ -31,7 +37,12 @@ public class PlateIconUI : MonoBehaviour
         }
 
         // Create new visuals based on the ingredients on the plate
-        foreach (KitchenObjectSO kitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
+        var ingredients = plateKitchenObject.GetKitchenObjectSOList();
+        if (ingredients == null)
+        {
+            return;
+        }
+        foreach (KitchenObjectSO kitchenObjectSO in ingredients)
         {
             Transform iconTransform = Instantiate(iconTemplate, transform);
             iconTransform.gameObject.SetActive(true);

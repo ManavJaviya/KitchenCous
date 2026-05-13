@@ -10,11 +10,26 @@ public class DeliveryManagerUI : MonoBehaviour
     {
         recipeTemplete.gameObject.SetActive(false);
     }
+    private DeliveryManager subscribedDeliveryManager;
+
     private void Start()
     {
-        DeliveryManager.Instance.OnRecipeSpawn += DeliveryManager_OnRecipeSpawn;
-        DeliveryManager.Instance.OnRecipeCompleted += DeliveryManager_OnRecipeCompleted;
+        subscribedDeliveryManager = DeliveryManager.Instance;
+        if (subscribedDeliveryManager != null)
+        {
+            subscribedDeliveryManager.OnRecipeSpawn += DeliveryManager_OnRecipeSpawn;
+            subscribedDeliveryManager.OnRecipeCompleted += DeliveryManager_OnRecipeCompleted;
+        }
         UpdateVisual();
+    }
+
+    private void OnDestroy()
+    {
+        if (subscribedDeliveryManager != null)
+        {
+            subscribedDeliveryManager.OnRecipeSpawn -= DeliveryManager_OnRecipeSpawn;
+            subscribedDeliveryManager.OnRecipeCompleted -= DeliveryManager_OnRecipeCompleted;
+        }
     }
 
     private void DeliveryManager_OnRecipeCompleted(object sender, EventArgs e)

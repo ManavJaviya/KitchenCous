@@ -14,26 +14,11 @@ public class CoitainerCounter : BaseCounter
 
          onPlayerGrabObject?.Invoke(this, EventArgs.Empty);
       }
-      else
+      else if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
       {
-         if (player.HasKitchenObject())
+         if (plateKitchenObject.TryAddIngredient(kitchenObjectSO))
          {
-            //player already have kitchen object can't grab more than one   
-            if (player.HasKitchenObject())
-            {
-               //player already have kitchen object can't grab more than one
-               if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
-               { //player has plate
-                  if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
-                  {
-                     player.GetKitchenObject().DestroySelf();
-                  }
-               }
-            }
-         }
-         else
-         {
-            GetKitchenObject().SetKitchenObjectParent(player);
+            onPlayerGrabObject?.Invoke(this, EventArgs.Empty);
          }
       }
    }

@@ -32,6 +32,22 @@ public class StoveCounter : BaseCounter, IHasProgress
         state = State.Ideal;
     }
 
+    public override void ClearForRestart()
+    {
+        base.ClearForRestart();
+        state = State.Ideal;
+        fryingTimer = 0f;
+        burningTimer = 0f;
+        stoveRecipeSO = null;
+        burningRcipeSo = null;
+
+        onStateChange?.Invoke(this, new onStateChangeEventArgs { state = state });
+        onProgressChange?.Invoke(this, new IHasProgress.onProgressChangeEventArgs
+        {
+            progressNormalized = 0f
+        });
+    }
+
     void Update()
     {
         if (HasKitchenObject())

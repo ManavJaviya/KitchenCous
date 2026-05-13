@@ -5,10 +5,24 @@ using UnityEngine;
 public class GameOverUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI recipesDeliveredNumber;
-   private void Start()
+    private GameManager subscribedGameManager;
+
+    private void Start()
     {
-        GameManager.Instance.OnStateChanged += GameManager_OnStatechanged;
+        subscribedGameManager = GameManager.Instance;
+        if (subscribedGameManager != null)
+        {
+            subscribedGameManager.OnStateChanged += GameManager_OnStatechanged;
+        }
         Hide();
+    }
+
+    private void OnDestroy()
+    {
+        if (subscribedGameManager != null)
+        {
+            subscribedGameManager.OnStateChanged -= GameManager_OnStatechanged;
+        }
     }
 
     private void GameManager_OnStatechanged(object sender, EventArgs e)

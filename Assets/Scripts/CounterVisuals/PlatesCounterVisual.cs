@@ -15,6 +15,27 @@ public class PlatesCounterVisual : MonoBehaviour
     private void Start() {
         platesCounter.OnplateSpwaned += PlatesCounter_OnplateSpwaned;
         platesCounter.OnplateRemoved += PlatesCounter_OnplateRemoved;
+        platesCounter.OnPlatesStackCleared += PlatesCounter_OnPlatesStackCleared;
+    }
+
+    private void OnDestroy()
+    {
+        if (platesCounter == null) return;
+        platesCounter.OnplateSpwaned -= PlatesCounter_OnplateSpwaned;
+        platesCounter.OnplateRemoved -= PlatesCounter_OnplateRemoved;
+        platesCounter.OnPlatesStackCleared -= PlatesCounter_OnPlatesStackCleared;
+    }
+
+    private void PlatesCounter_OnPlatesStackCleared(object sender, EventArgs e)
+    {
+        foreach (GameObject plateGameObject in plateVisualGameObjectList)
+        {
+            if (plateGameObject != null)
+            {
+                Destroy(plateGameObject);
+            }
+        }
+        plateVisualGameObjectList.Clear();
     }
 
     private void PlatesCounter_OnplateRemoved(object sender, EventArgs e)

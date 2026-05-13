@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 
 public class PlateKitchenObject : KitchenObject
@@ -13,13 +12,20 @@ public class PlateKitchenObject : KitchenObject
     [SerializeField] public List<KitchenObjectSO> validKitchenObjectSOList;
     public List<KitchenObjectSO> kitchenObjectSOList;
 
-    void Start()
+    private void Awake()
     {
-        kitchenObjectSOList = new List<KitchenObjectSO>();
+        if (kitchenObjectSOList == null)
+        {
+            kitchenObjectSOList = new List<KitchenObjectSO>();
+        }
     }
 
     public bool TryAddIngredient(KitchenObjectSO kitchenObjectSO)
     {
+        if (kitchenObjectSOList == null)
+        {
+            kitchenObjectSOList = new List<KitchenObjectSO>();
+        }
         if (!validKitchenObjectSOList.Contains(kitchenObjectSO))
         {
             //Not a valid ingredient for plate
@@ -43,6 +49,10 @@ public class PlateKitchenObject : KitchenObject
     }
     public List<KitchenObjectSO> GetKitchenObjectSOList()
     {
-        return kitchenObjectSOList;;
+        if (kitchenObjectSOList == null)
+        {
+            kitchenObjectSOList = new List<KitchenObjectSO>();
+        }
+        return kitchenObjectSOList;
     }
 }

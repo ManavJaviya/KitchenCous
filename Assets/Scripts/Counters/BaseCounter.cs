@@ -43,4 +43,15 @@ public class BaseCounter : MonoBehaviour, IKichenObjectParent
    {
       return kitchenObject != null;
    }
+
+   /// <summary>
+   /// Removes any kitchen object sitting on this counter and resets counter-specific state for a full game restart.
+   /// </summary>
+   public virtual void ClearForRestart()
+   {
+      if (HasKitchenObject())
+      {
+         GetKitchenObject().DestroySelf();
+      }
+   }
 }

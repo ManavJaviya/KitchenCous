@@ -10,6 +10,17 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
     [SerializeField] CuttingRecipeSO[] cuttingKitchenObjectSOArray;
     [SerializeField] int cuttingProgress;
+
+    public override void ClearForRestart()
+    {
+        base.ClearForRestart();
+        cuttingProgress = 0;
+        onProgressChange?.Invoke(this, new IHasProgress.onProgressChangeEventArgs
+        {
+            progressNormalized = 0f
+        });
+    }
+
     public override void Interact(Player player)
     {
         if (!HasKitchenObject())

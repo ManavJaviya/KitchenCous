@@ -26,15 +26,29 @@ public class Player : MonoBehaviour, IKichenObjectParent
      {
           if (Instance != null)
           {
-               Debug.LogError("there is more than one player");
+               Debug.LogError("More than one Player in scene.");
+               Destroy(gameObject);
+               return;
           }
           Instance = this;
      }
 
      private void Start()
      {
-          gameInput.OnInteractAction += GameInput_OnInteractAction;
-          gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
+          if (gameInput != null)
+          {
+               gameInput.OnInteractAction += GameInput_OnInteractAction;
+               gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
+          }
+     }
+
+     private void OnDestroy()
+     {
+          if (gameInput != null)
+          {
+               gameInput.OnInteractAction -= GameInput_OnInteractAction;
+               gameInput.OnInteractAlternateAction -= GameInput_OnInteractAlternateAction;
+          }
      }
 
      private void GameInput_OnInteractAction(object sender, System.EventArgs e)

@@ -16,6 +16,12 @@ public class GameMenu : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogError("More than one GameMenu in scene.");
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;   
     }
     private void Start()

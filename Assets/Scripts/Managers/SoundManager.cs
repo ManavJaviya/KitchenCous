@@ -7,19 +7,51 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance {get; private set;}
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
+    private DeliveryManager subscribedDeliveryManager;
+    private Player subscribedPlayer;
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogError("More than one SoundManager in scene.");
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
     }
     private void Start()
     {
-        DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
-        DeliveryManager.Instance.OnRecipeFail += DeliveryManager_OnRecipeFail;
+        subscribedDeliveryManager = DeliveryManager.Instance;
+        if (subscribedDeliveryManager != null)
+        {
+            subscribedDeliveryManager.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
+            subscribedDeliveryManager.OnRecipeFail += DeliveryManager_OnRecipeFail;
+        }
         CuttingCounter.OnAnyCut += CuttingCounter_OnAnyCut;
-        Player.Instance.OnPickup += Player_Onpickup;
+        subscribedPlayer = Player.Instance;
+        if (subscribedPlayer != null)
+        {
+            subscribedPlayer.OnPickup += Player_Onpickup;
+        }
         BaseCounter.OnObjectPalceHere += BaseCounter_OnObjectPalceHere;
         TrashCounter.OnObjectTrashed += TrashCounter_OnObjectTrashed;
+    }
+
+    private void OnDestroy()
+    {
+        if (subscribedDeliveryManager != null)
+        {
+            subscribedDeliveryManager.OnRecipeSuccess -= DeliveryManager_OnRecipeSuccess;
+            subscribedDeliveryManager.OnRecipeFail -= DeliveryManager_OnRecipeFail;
+        }
+        CuttingCounter.OnAnyCut -= CuttingCounter_OnAnyCut;
+        if (subscribedPlayer != null)
+        {
+            subscribedPlayer.OnPickup -= Player_Onpickup;
+        }
+        BaseCounter.OnObjectPalceHere -= BaseCounter_OnObjectPalceHere;
+        TrashCounter.OnObjectTrashed -= TrashCounter_OnObjectTrashed;
     }
 
     private void TrashCounter_OnObjectTrashed(object sender, EventArgs e)
@@ -36,7 +68,11 @@ public class SoundManager : MonoBehaviour
 
     private void Player_Onpickup(object sender, EventArgs e)
     {
-        Player player = Player.Instance;
+        Player player = sender as Player;
+        if (player == null)
+        {
+            return;
+        }
         PlaySound(audioClipRefsSO.objectPick ,player.transform.position );
     }
 

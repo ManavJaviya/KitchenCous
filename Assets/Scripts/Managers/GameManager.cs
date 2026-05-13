@@ -19,26 +19,22 @@ public class GameManager : MonoBehaviour
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
-    private float gamePlayingTimerMax = 20f;
+    [SerializeField] private float gamePlayingTimerMax = 20f;
     private bool isGamePause = false;
 
     private State state;
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogError("More than one GameManager in scene.");
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
         state = State.WaitingToStart;
     }
-    private void Start()
-    {
-        GameMenu.Instance.OnRestart += GameMenu_OnRestart;
-    }
-
-    private void GameMenu_OnRestart(object sender, EventArgs e)
-    {
-        countdownToStartTimer = 3f;
-    }
-
     private void Update()
     {
         switch(state)
@@ -97,6 +93,28 @@ public class GameManager : MonoBehaviour
     }
     public void Restart()
     {
+        ClearKitchenWorldForRestart();
+
         state = State.WaitingToStart;
+        waitingToStartTimer = 1f;
+        countdownToStartTimer = 3f;
+        gamePlayingTimer = gamePlayingTimerMax;
+        isGamePause = false;
+        OnStateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private static void ClearKitchenWorldForRestart()
+    {
+        if (Player.Instance != null && Player.Instance.HasKitchenObject())
+        {
+            Player.Instance.GetKitchenObject().DestroySelf();
+        }
+
+        BaseCounter[] counters = UnityEngine.Object.FindObjectsByType<BaseCounter>(
+            FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (BaseCounter counter in counters)
+        {
+            counter.ClearForRestart();
+        }
     }
 }
